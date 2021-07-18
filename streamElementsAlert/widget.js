@@ -111,3 +111,69 @@
 		if (duration > 0) setTimeout(() => img.fadeOut('slow', () => img.remove()), duration * 1000)
 	}
 })()
+
+// StreamElements API looks like several APIs glued together by sleep deprived interns
+// Luckily, I am excellent at working around problems
+;(async () => {
+	const {
+		detail: { recents, currency, fieldData: config },
+	} = await new Promise((callback) => window.addEventListener('onWidgetLoad', callback))
+
+	const {
+		includeFollowers,
+		includeRedemptions,
+		includeHosts,
+		includeRaids,
+		includeSubs,
+		includeTips,
+		includeCheers,
+		giphyApiKey: key, //streamElements is overzealously replacing any {config}
+		fallbackImage,
+	} = config
+
+	async function queryGiphy(query) {
+		const gifs = await (
+			await fetch(`https://api.giphy.com/v1/gifs/search?api_key=${key}&q=${query}&limit=1&rating=pg-13`)
+		).json()
+		console.log(gifs)
+		if (gifs.data.length < 1) return fallbackImage
+		else return `https://media.giphy.com/media/${gifs.data[0].id}/giphy.gif`
+	}
+
+	async function processEvent(event) {
+		const { name, amount, message, type } = event
+		const imgSrc = await queryGiphy(name)
+		const action = {
+			follower: includeFollowers && `just followed!`,
+			redemption: includeRedemptions && `just redeemed an item!`,
+			subscriber: includeSubs && !event.gifted && `just donated ${amount} subs!`,
+			host: includeHosts && `is hosting with ${amount} viewers!!`,
+			cheer: includeCheers && `just cheered x${amount}!`,
+			tip: includeTips && `just tipped ${amount}!`,
+			raid: includeRaids && `just raided with ${amount} viewers!`,
+		}[type]
+		if (!action) return
+		createBouncingImage({
+			src: imgSrc,
+			duration: 5,
+			textElem: `
+					<p style="text-shadow: inherit;"><b style="color: darkblue; text-shadow: 0.1rem 0.1rem white;">${name}</b> ${action}</p>
+					${message ? `<p style="font-size:80%; text-shadow: inherit;">${message}</p>` : ''}
+				`,
+		})
+	}
+
+	// process recent events before widget loaded. I guess.
+	recents.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)).forEach(processEvent)
+
+	window.addEventListener('onEventReceived', ({ detail: { event, listener } }) => {
+		// following logic in the default example
+		if (event == null) return
+		if (event.itemId != null) obj.detail.listener = 'redemption-latest'
+		const match = listener.match(/^(.+)-latest$/)
+		if (match == null) return
+
+		event.type = match[1] // force event structure to match that provided by recents, I guess.
+		processEvent(event)
+	})
+})()

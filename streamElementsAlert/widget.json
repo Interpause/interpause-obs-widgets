@@ -1,0 +1,50 @@
+{
+  "eventsLimit": {
+    "type": "number",
+    "label": "Limit displayed events to:",
+    "value": 5
+  },
+  "includeFollowers": {
+    "type": "checkbox",
+    "label": "Display followers",
+    "value": true
+  },
+  "includeRedemptions": {
+    "type": "checkbox",
+    "label": "Display redemptions",
+    "value": true
+  },
+  "includeHosts": {
+    "type": "checkbox",
+    "label": "Display hosts",
+    "value": true
+  },
+  "includeRaids": {
+    "type": "checkbox",
+    "label": "Display raids",
+    "value": true
+  },
+  "includeSubs": {
+    "type": "checkbox",
+    "label": "Display subscribers",
+    "value": true
+  },
+  "includeTips": {
+    "type": "checkbox",
+    "label": "Display tips",
+    "value": true
+  },
+  "includeCheers": {
+    "type": "checkbox",
+    "label": "Display cheers",
+    "value": true
+  },
+	"giphyApiKey": {
+		"type": "text",
+		"label": "API Key for Giphy"
+	},
+	"fallbackImage": {
+		"type": "text",
+		"label": "URL for fallback image"
+	}
+}
