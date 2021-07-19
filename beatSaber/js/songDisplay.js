@@ -112,7 +112,7 @@
 						<p id="song-hash">${songHash} &#x1F511;</p>
 						<p>${levelAuthorName} &#x1F9EE;</p>
 						<p>${songAuthorName} &#x1F3BC;</p>
-						<p>BPM: ${songBPM} | NJS: ${noteJumpSpeed} | ${difficulty == 'ExpertPlus' ? 'Expert+' : difficulty}</p>
+						<p>BPM: ${Math.floor(songBPM)} | NJS: ${noteJumpSpeed} | ${difficulty == 'ExpertPlus' ? 'Expert+' : difficulty}</p>
 					</div>
 					<img id="song-image" src="data:image/png;base64,${songCover}"/>
 					<svg id="progress-ring" viewBox="0 0 64 64">
@@ -142,7 +142,7 @@
 			time += 1
 			if (time * 1000 > length) return
 			updateProgressRing((time / length) * 1000)
-			$('#progress-ring text').text(`${(time / 60) | 0}:${`${time % 60}`.padStart(2, '0')}`)
+			$('#progress-ring text').text(`${(time / 60) | 0}:${`${time % 60 | 0}`.padStart(2, '0')}`)
 		}, 1000)
 
 	function startSong({ beatmap }) {
