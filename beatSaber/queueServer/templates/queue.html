@@ -4,7 +4,7 @@
 	<div class='item' style="order:{{ dat.time }}">
 		<img src='https://beatsaver.com{{ dat.song.coverURL }}'>
 		<div class='detail'>
-			<div class='row'><span><em>{{ dat.song.key }}</em> {% if dat.song.songSubName != "" %}{{ dat.song.songSubName }} — {% endif %}{{ dat.song.songName }}</span></div>
+			<div class='row'><span><em class='song-key'>{{ dat.song.key }}</em> {% if dat.song.songSubName != "" %}{{ dat.song.songSubName }} — {% endif %}{{ dat.song.songName }}</span></div>
 			<div class='row'>
 				<span><em>Artist</em>: {{ dat.song.authorName }}</span>
 				<span><em>Mapper</em>: {{ dat.song.levelAuthor }}</span>

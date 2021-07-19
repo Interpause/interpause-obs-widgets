@@ -9,6 +9,7 @@
 
 	body{
 		font-family: "OCR A Extended",Helvetica,sans-serif;
+		background-color: black;
 		margin: 0;
 		height: 100vh;
 		display: flex;
@@ -81,23 +82,25 @@
 	<div class='container'></div>
 
 	<script>
-		function updateQueue(){
-			setTimeout(() => {
-				fetch('http://localhost:5050/queue',{mode:'cors'}).then(resp => {
-					resp.text().then(t =>{
-						//console.log(t);
-						document.querySelector('.container').innerHTML = t;
-						document.querySelectorAll('.requestor').forEach((elem) => {
-							elem.innerText = JSON.parse(elem.innerText).DisplayName
-						});
-						updateQueue();
-					})
-				}).catch(e => {
-					console.error(e);
-					updateQueue();
-				})
-			},5000);
-		}
-		updateQueue();
+		(async () => {
+			let delay = 1000;
+			while(true){
+				await new Promise(c => setTimeout(c,delay))
+
+				const curQueue = encodeURIComponent([...document.querySelectorAll('.song-key')].map(e => e.innerText).sort().join('&'))
+				let data = 'NO CHANGE'
+
+				try {
+					data = await (await fetch(`http://localhost:5050/queue?current=${curQueue}`,{mode:'cors'})).text()
+				}catch(e){
+					console.warn(e)
+				}
+
+				if(data == 'NO CHANGE') continue
+
+				document.querySelector('.container').innerHTML = data;
+				document.querySelectorAll('.requestor').forEach((e) => e.innerText = JSON.parse(e.innerText).DisplayName);
+			}
+		})()
 	</script>
 </body>
