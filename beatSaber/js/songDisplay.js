@@ -85,7 +85,7 @@
 		})
 	}
 
-	function renderOverlay(beatmap) {
+	async function renderOverlay(beatmap) {
 		const {
 			songName,
 			songSubName,
@@ -98,8 +98,15 @@
 			difficulty,
 		} = beatmap
 
+		let key = `${songName}${noteJumpSpeed}${levelAuthorName}` // idk placeholder
+		try {
+			key = await (await fetch(`https://beatsaver.com/api/maps/by-hash/${songHash}`)).json().key
+		} catch (e) {
+			console.warn(e)
+		}
+
 		// will be false if the overlay isn't rendered at all so it works
-		if ($('#song-hash').text().split(' ')[0] == songHash) return
+		if ($('#song-hash').text().split(' ')[0] == key) return
 
 		console.log('rendering expensive overlay')
 
@@ -109,7 +116,7 @@
 				<h3 style="margin:0; line-height: 1.5;">${songName}</h3>
 				<div style="position: relative; height: 6rem;">
 					<div id="song-details" class="rainbow-bg">
-						<p id="song-hash">${songHash} &#x1F511;</p>
+						<p id="song-hash">${key} &#x1F511;</p>
 						<p>${levelAuthorName} &#x1F9EE;</p>
 						<p>${songAuthorName} &#x1F3BC;</p>
 						<p>BPM: ${Math.floor(songBPM)} | NJS: ${noteJumpSpeed} | ${difficulty == 'ExpertPlus' ? 'Expert+' : difficulty}</p>
@@ -146,6 +153,7 @@
 		}, 1000)
 
 	function startSong({ beatmap }) {
+		hideQueue()
 		renderOverlay(beatmap)
 
 		if (timer) clearInterval(timer)
@@ -154,6 +162,7 @@
 	}
 
 	function endSong() {
+		showQueue()
 		if (timer) clearInterval(timer)
 		container.children().fadeOut('slow', () => container.empty())
 	}
@@ -180,7 +189,7 @@
 		}
 
 		ws.onmessage = (e) => {
-			const data = JSON.parse(e.data)
+			const msg = JSON.parse(e.data)
 			switch (msg.event) {
 				case 'hello':
 					console.log('Connected!')
@@ -203,6 +212,7 @@
 			}
 		}
 	}
+	;(async () => connectToBeatSaber())()
 
 	/* test */
 	/*

@@ -1,8 +1,9 @@
 <style>
 	@import url(https://db.onlinewebfonts.com/c/2d814a09d668f730cc91d8d6e390dc08?family=OCR+A+Extended);
-	.container{
+	.queue-container{
 		display: flex;
-		width: 100vw;
+		width: 80vw;
+		padding-left: 20vw;
 		flex-direction: column-reverse;
 		overflow: hidden;
 	}
@@ -18,7 +19,7 @@
 	}
 
 	.item{
-		width: 100%;
+		width: auto;
 		height: 5rem;
 		background-color: rgba(0,0,0,0.6);
 		margin-top: 0.8rem;
@@ -28,6 +29,7 @@
 	.item img{
 		height: 5rem;
 		width: 5rem;
+		flex: 0;
 	}
 
 	.item .detail{
@@ -35,7 +37,7 @@
 		color: white;
 		vertical-align: top;
 		display: inline-flex;
-		flex-grow: 1;
+		flex: 1 1 auto;
 		line-height: 1.2rem;
 		flex-direction: column;
 	}
@@ -44,42 +46,41 @@
 		display: flex;
 		flex-direction: row;
 		border-top: 0.05rem solid white;
-		max-width: 100%;
 	}
 
 	.item .row span{
-		flex-grow: 1 1 20%;
-		max-width: 100%;
-	}
-
-	span{
+		flex: 1 1 20px;
 		border-left: 0.05rem solid white;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
-		width: 100%;
 	}
 
-	h1{
-		width: 100%;
+	#infobox {
 		text-align: right;
 		color: white;
+	}
+
+	#infobox > h1{
 		font-weight: bold;
 		margin: 0;
 		margin-top: 0.2rem;
 	}
 
-	p{
-		color: white;
-		text-align: right;
+	#infobox > p{
 		margin: 0.2rem;
 	}
 </style>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<link rel='stylesheet' href='./css/rainbow.css'>
+	
 <body>
-	<h1>Queue</h1>
-	<p>!request &lt;name or key&gt;<br/>find songs at beatsaver.com</p>
-	<div class='container'></div>
+	<div id="infobox">
+		<h1>Queue</h1>
+		<p>!request &lt;name or key&gt;<br/>find songs at beatsaver.com</p>
+	</div>
+	<div class='queue-container'></div>
 
 	<script>
 		(async () => {
@@ -87,7 +88,7 @@
 			while(true){
 				await new Promise(c => setTimeout(c,delay))
 
-				const curQueue = encodeURIComponent([...document.querySelectorAll('.song-key')].map(e => e.innerText).sort().join('&'))
+				const curQueue = encodeURIComponent($('.song-key').get().map(e => e.innerText).sort().join('&'))
 				let data = 'NO CHANGE'
 
 				try {
@@ -98,9 +99,18 @@
 
 				if(data == 'NO CHANGE') continue
 
-				document.querySelector('.container').innerHTML = data;
-				document.querySelectorAll('.requestor').forEach((e) => e.innerText = JSON.parse(e.innerText).DisplayName);
+				$('.queue-container').html(data)
+				$('.requestor').each((_,e) => e.innerText = JSON.parse(e.innerText).DisplayName)
 			}
 		})()
+
+		function showQueue() {
+			$('.queue-container, #infobox').fadeIn()
+		}
+	
+		function hideQueue() {
+			$('.queue-container, #infobox').fadeOut()
+		}
 	</script>
+	<script src='./js/songDisplay.js'></script>
 </body>
