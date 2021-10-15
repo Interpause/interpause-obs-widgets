@@ -100,7 +100,7 @@
 
 		let key = `${songName}${noteJumpSpeed}${levelAuthorName}` // idk placeholder
 		try {
-			key = await (await fetch(`https://beatsaver.com/api/maps/by-hash/${songHash}`)).json().key
+			key = (await (await fetch(`https://api.beatsaver.com/maps/hash/${songHash}`)).json()).id
 		} catch (e) {
 			console.warn(e)
 		}
