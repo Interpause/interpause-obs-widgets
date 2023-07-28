@@ -6,7 +6,7 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-path = "E:/Steam/steamapps/common/Beat Saber/UserData/SRM/SongRequestQueue.dat"
+path = "E:/Steam/steamapps/common/Beat Saber/UserData/BeatSaberPlus/ChatRequest/SimpleQueue.txt"
 
 @app.route('/queue',methods=['GET'])
 @cross_origin()
