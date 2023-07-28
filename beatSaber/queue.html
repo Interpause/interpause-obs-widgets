@@ -85,7 +85,7 @@
 	<script>
 		(async () => {
 			let delay = 1000;
-			while(true){
+			while(false){
 				await new Promise(c => setTimeout(c,delay))
 
 				const curQueue = encodeURIComponent($('.song-key').get().map(e => e.innerText).sort().join('&'))
@@ -105,12 +105,15 @@
 		})()
 
 		function showQueue() {
+			return
 			$('.queue-container, #infobox').fadeIn()
 		}
 	
 		function hideQueue() {
 			$('.queue-container, #infobox').fadeOut()
+			return
 		}
+		hideQueue()
 	</script>
 	<script src='./js/songDisplay.js'></script>
 </body>
