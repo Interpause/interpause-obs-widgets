@@ -67,7 +67,7 @@
 				text-align: right;
 				padding: 0.5rem;
 				position: absolute;
-				bottom: 0;
+				top: 0;
 				right: 0;
 			}
 
