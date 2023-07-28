@@ -128,10 +128,12 @@
       }</p>
 					</div>
 					<img id="song-image" src="data:image/png;base64,${songCover}"/>
+          <!--
 					<svg id="progress-ring" viewBox="0 0 64 64">
 						<circle/>
 						<text x="50%" y="50%">0:00</text>
 					</svg>
+          -->
 				</div>
 				`
     )

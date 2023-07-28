@@ -305,5 +305,5 @@
 }
 
 .rainbow-bg {
-	animation: 1s linear 0s infinite back-rainbow;
+	animation: 10s linear 0s infinite back-rainbow;
 }
