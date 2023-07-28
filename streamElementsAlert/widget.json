@@ -39,12 +39,12 @@
     "label": "Display cheers",
     "value": true
   },
-	"giphyApiKey": {
-		"type": "text",
-		"label": "API Key for Giphy"
-	},
-	"fallbackImage": {
-		"type": "text",
-		"label": "URL for fallback image"
-	}
+  "giphyApiKey": {
+    "type": "text",
+    "label": "API Key for Giphy"
+  },
+  "fallbackImage": {
+    "type": "text",
+    "label": "URL for fallback image"
+  }
 }

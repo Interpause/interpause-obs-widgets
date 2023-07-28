@@ -1,7 +1,7 @@
 ;(() => {
-	if (window.jQuery == null) throw 'JQuery required!'
+  if (window.jQuery == null) throw 'JQuery required!'
 
-	$(`
+  $(`
 		<style>
 		@import url(https://db.onlinewebfonts.com/c/2d814a09d668f730cc91d8d6e390dc08?family=OCR+A+Extended);
 
@@ -73,53 +73,59 @@
 
 		</style>`).appendTo('head')
 
-	const container = $(`<div id="song-container"/>`).appendTo('body')
+  const container = $(`<div id="song-container"/>`).appendTo('body')
 
-	function updateProgressRing(percent) {
-		const circle = $('#progress-ring > circle')
-		const arc = parseInt(circle.css('r')) * Math.PI * 2
+  function updateProgressRing(percent) {
+    const circle = $('#progress-ring > circle')
+    const arc = parseInt(circle.css('r')) * Math.PI * 2
 
-		circle.css({
-			strokeDasharray: `${arc} ${arc}`,
-			strokeDashoffset: `${arc - percent * arc}`,
-		})
-	}
+    circle.css({
+      strokeDasharray: `${arc} ${arc}`,
+      strokeDashoffset: `${arc - percent * arc}`,
+    })
+  }
 
-	async function renderOverlay(beatmap) {
-		const {
-			songName,
-			songSubName,
-			songAuthorName,
-			levelAuthorName,
-			songCover,
-			songHash,
-			songBPM,
-			noteJumpSpeed,
-			difficulty,
-		} = beatmap
+  async function renderOverlay(beatmap) {
+    const {
+      songName,
+      songSubName,
+      songAuthorName,
+      levelAuthorName,
+      songCover,
+      songHash,
+      songBPM,
+      noteJumpSpeed,
+      difficulty,
+    } = beatmap
 
-		let key = `${songName}${noteJumpSpeed}${levelAuthorName}` // idk placeholder
-		try {
-			key = (await (await fetch(`https://api.beatsaver.com/maps/hash/${songHash}`)).json()).id
-		} catch (e) {
-			console.warn(e)
-		}
+    let key = `${songName}${noteJumpSpeed}${levelAuthorName}` // idk placeholder
+    try {
+      key = (
+        await (
+          await fetch(`https://api.beatsaver.com/maps/hash/${songHash}`)
+        ).json()
+      ).id
+    } catch (e) {
+      console.warn(e)
+    }
 
-		// will be false if the overlay isn't rendered at all so it works
-		if ($('#song-hash').text().split(' ')[0] == key) return
+    // will be false if the overlay isn't rendered at all so it works
+    if ($('#song-hash').text().split(' ')[0] == key) return
 
-		console.log('rendering expensive overlay')
+    console.log('rendering expensive overlay')
 
-		container.empty()
-		$(
-			`
+    container.empty()
+    $(
+      `
 				<h3 style="margin:0; line-height: 1.5;">${songName}</h3>
 				<div style="position: relative; height: 6rem;">
 					<div id="song-details" class="rainbow-bg">
 						<p id="song-hash">${key} &#x1F511;</p>
 						<p>${levelAuthorName} &#x1F9EE;</p>
 						<p>${songAuthorName} &#x1F3BC;</p>
-						<p>BPM: ${Math.floor(songBPM)} | NJS: ${noteJumpSpeed} | ${difficulty == 'ExpertPlus' ? 'Expert+' : difficulty}</p>
+						<p>BPM: ${Math.floor(songBPM)} | NJS: ${noteJumpSpeed} | ${
+        difficulty == 'ExpertPlus' ? 'Expert+' : difficulty
+      }</p>
 					</div>
 					<img id="song-image" src="data:image/png;base64,${songCover}"/>
 					<svg id="progress-ring" viewBox="0 0 64 64">
@@ -128,94 +134,96 @@
 					</svg>
 				</div>
 				`
-		)
-			.css({ display: 'none' })
-			.appendTo(container)
-			.fadeIn('slow')
+    )
+      .css({ display: 'none' })
+      .appendTo(container)
+      .fadeIn('slow')
 
-		updateProgressRing(0)
-	}
+    updateProgressRing(0)
+  }
 
-	function updateCut(msg) {
-		//TODO: some sort of overlay for score, rank, energy bar, spin speed etc but you too noob so don't show for now
-	}
+  function updateCut(msg) {
+    //TODO: some sort of overlay for score, rank, energy bar, spin speed etc but you too noob so don't show for now
+  }
 
-	let timer = undefined
-	const timeOffset = -1
-	let time = timeOffset
+  let timer = undefined
+  const timeOffset = -1
+  let time = timeOffset
 
-	const getTimerUpdater = (length) =>
-		setInterval(() => {
-			time += 1
-			if (time * 1000 > length) return
-			updateProgressRing((time / length) * 1000)
-			$('#progress-ring text').text(`${(time / 60) | 0}:${`${time % 60 | 0}`.padStart(2, '0')}`)
-		}, 1000)
+  const getTimerUpdater = (length) =>
+    setInterval(() => {
+      time += 1
+      if (time * 1000 > length) return
+      updateProgressRing((time / length) * 1000)
+      $('#progress-ring text').text(
+        `${(time / 60) | 0}:${`${time % 60 | 0}`.padStart(2, '0')}`
+      )
+    }, 1000)
 
-	function startSong({ beatmap }) {
-		hideQueue()
-		renderOverlay(beatmap)
+  function startSong({ beatmap }) {
+    hideQueue()
+    renderOverlay(beatmap)
 
-		if (timer) clearInterval(timer)
-		time = timeOffset
-		timer = getTimerUpdater(beatmap.length)
-	}
+    if (timer) clearInterval(timer)
+    time = timeOffset
+    timer = getTimerUpdater(beatmap.length)
+  }
 
-	function endSong() {
-		showQueue()
-		if (timer) clearInterval(timer)
-		container.children().fadeOut('slow', () => container.empty())
-	}
+  function endSong() {
+    showQueue()
+    if (timer) clearInterval(timer)
+    container.children().fadeOut('slow', () => container.empty())
+  }
 
-	function pauseSong() {
-		if (timer) clearInterval(timer)
-	}
+  function pauseSong() {
+    if (timer) clearInterval(timer)
+  }
 
-	function resumeSong({ beatmap: { length } }) {
-		if (timer) clearInterval(timer)
-		timer = getTimerUpdater(length)
-	}
+  function resumeSong({ beatmap: { length } }) {
+    if (timer) clearInterval(timer)
+    timer = getTimerUpdater(length)
+  }
 
-	function connectToBeatSaber() {
-		const ws = new WebSocket('ws://localhost:6557/socket')
+  function connectToBeatSaber() {
+    const ws = new WebSocket('ws://localhost:6557/socket')
 
-		ws.onerror = (e) => console.error(e)
+    ws.onerror = (e) => console.error(e)
 
-		ws.onclose = (e) => {
-			console.warn(e)
-			console.log(`Reconnecting`)
-			connectToBeatSaber()
-			ws.close()
-		}
+    ws.onclose = (e) => {
+      console.warn(e)
+      console.log(`Reconnecting`)
+      connectToBeatSaber()
+      ws.close()
+    }
 
-		ws.onmessage = (e) => {
-			const msg = JSON.parse(e.data)
-			switch (msg.event) {
-				case 'hello':
-					console.log('Connected!')
-					break
-				case 'songStart':
-					startSong(msg.status)
-					break
-				case 'menu':
-					endSong()
-					break
-				case 'pause':
-					pauseSong()
-					break
-				case 'resume':
-					resumeSong(msg.status)
-					break
-				case 'noteCut':
-					updateCut(msg)
-					break
-			}
-		}
-	}
-	;(async () => connectToBeatSaber())()
+    ws.onmessage = (e) => {
+      const msg = JSON.parse(e.data)
+      switch (msg.event) {
+        case 'hello':
+          console.log('Connected!')
+          break
+        case 'songStart':
+          startSong(msg.status)
+          break
+        case 'menu':
+          endSong()
+          break
+        case 'pause':
+          pauseSong()
+          break
+        case 'resume':
+          resumeSong(msg.status)
+          break
+        case 'noteCut':
+          updateCut(msg)
+          break
+      }
+    }
+  }
+  ;(async () => connectToBeatSaber())()
 
-	/* test */
-	/*
+  /* test */
+  /*
 	const props = {
 		songName: 'Isogrid Room',
 		songSubName: 'MetaTTT',
@@ -232,7 +240,7 @@
 		length: 300000,
 	}
 	*/
-	/*
+  /*
 	console.log('render 1: initial')
 	renderOverlay(props)
 	console.log('render 2: should not render as unchanged hash')
@@ -241,7 +249,7 @@
 	container.empty()
 	renderOverlay(props)
 	*/
-	/*
+  /*
 	console.log('Start Song')
 	startSong({ beatmap: props })
 	;(async () => {
@@ -256,7 +264,7 @@
 		endSong()
 	})()
 	*/
-	/*
+  /*
 	;(async () => {
 		for (let i = 0; i < 1000; i++) {
 			await new Promise((callback) => setTimeout(callback, 200))

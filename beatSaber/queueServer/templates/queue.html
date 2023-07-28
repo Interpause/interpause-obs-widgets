@@ -1,20 +1,20 @@
 {% macro getQueue(songs) %}
 {%- for dat in songs -%}
-	<div class='item'>
-		<div class='detail'>
-			<div class='row'><span>&#x1F511;<em class='song-key'>{{ dat.song.key }}</em> {{ dat.song.songName }}</span></div>
-			<div class='row'>
-				<span>&#x1F3BC;{{ dat.song.authorName }}</span>
-				<span>&#x1F9EE;{{ dat.song.levelAuthor }}</span>
-			</div>
-			<div class='row'>
-				<span><em>Time</em>: {{ dat.song.songlength }}</span>
-				<span><em>BPM</em>: {{ dat.song.metadata.bpm }}</span>
-				<span><em>NJS</em>: {{ '%.1f'%dat.song.njs }}</span>
-			</div>
-			<div class='row'><span>Requested by <em class="requestor">{{ dat.requestor }}</em></span></div>
+<div class='item'>
+	<div class='detail'>
+		<div class='row'><span>&#x1F511;<em class='song-key'>{{ dat.song.key }}</em> {{ dat.song.songName }}</span></div>
+		<div class='row'>
+			<span>&#x1F3BC;{{ dat.song.authorName }}</span>
+			<span>&#x1F9EE;{{ dat.song.levelAuthor }}</span>
 		</div>
-		<img src='https://beatsaver.com{{ dat.song.coverURL }}'>
+		<div class='row'>
+			<span><em>Time</em>: {{ dat.song.songlength }}</span>
+			<span><em>BPM</em>: {{ dat.song.metadata.bpm }}</span>
+			<span><em>NJS</em>: {{ '%.1f'%dat.song.njs }}</span>
+		</div>
+		<div class='row'><span>Requested by <em class="requestor">{{ dat.requestor }}</em></span></div>
 	</div>
+	<img src='https://beatsaver.com{{ dat.song.coverURL }}'>
+</div>
 {%- endfor -%}
 {% endmacro %}

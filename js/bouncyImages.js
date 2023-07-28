@@ -1,19 +1,19 @@
 ;(() => {
-	let xMin = 20,
-		xMax = 80,
-		yMin = 20,
-		yMax = 80,
-		xDurationMin = 3,
-		xDurationMax = 12,
-		yDurationMin = 3,
-		yDurationMax = 12,
-		size = '30rem'
+  let xMin = 20,
+    xMax = 80,
+    yMin = 20,
+    yMax = 80,
+    xDurationMin = 3,
+    xDurationMax = 12,
+    yDurationMin = 3,
+    yDurationMax = 12,
+    size = '30rem'
 
-	if (window.jQuery == null) throw 'JQuery required!'
+  if (window.jQuery == null) throw 'JQuery required!'
 
-	const randrange = (min, max) => Math.random() * (max - min) + min
+  const randrange = (min, max) => Math.random() * (max - min) + min
 
-	$(`
+  $(`
 		<style>
 			@import url(https://db.onlinewebfonts.com/c/2d814a09d668f730cc91d8d6e390dc08?family=OCR+A+Extended);
 			
@@ -87,10 +87,10 @@
 			}
 		</style>`).appendTo('head')
 
-	$(`<div id="container"/>`).appendTo('body')
+  $(`<div id="container"/>`).appendTo('body')
 
-	window.createBouncingImage = ({ src, textElem = '', duration = -1 }) => {
-		const img = $(`
+  window.createBouncingImage = ({ src, textElem = '', duration = -1 }) => {
+    const img = $(`
 			<div class="traveler" style="
 				display: none;
 				left: ${randrange(xMin, xMax)}%;
@@ -106,8 +106,9 @@
 					<div class="bouncyText">${textElem}</div>
 				</div>
 			</div>`)
-			.appendTo('#container')
-			.fadeIn('fast')
-		if (duration > 0) setTimeout(() => img.fadeOut('slow', () => img.remove()), duration * 1000)
-	}
+      .appendTo('#container')
+      .fadeIn('fast')
+    if (duration > 0)
+      setTimeout(() => img.fadeOut('slow', () => img.remove()), duration * 1000)
+  }
 })()

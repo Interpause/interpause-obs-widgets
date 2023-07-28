@@ -1,6 +1,7 @@
 <style>
 	@import url(https://db.onlinewebfonts.com/c/2d814a09d668f730cc91d8d6e390dc08?family=OCR+A+Extended);
-	.queue-container{
+
+	.queue-container {
 		display: flex;
 		width: 80vw;
 		padding-left: 20vw;
@@ -8,8 +9,8 @@
 		overflow: hidden;
 	}
 
-	body{
-		font-family: "OCR A Extended",Helvetica,sans-serif;
+	body {
+		font-family: "OCR A Extended", Helvetica, sans-serif;
 		background-color: black;
 		margin: 0;
 		height: 100vh;
@@ -18,21 +19,21 @@
 		flex-direction: column;
 	}
 
-	.item{
+	.item {
 		width: auto;
 		height: 5rem;
-		background-color: rgba(0,0,0,0.6);
+		background-color: rgba(0, 0, 0, 0.6);
 		margin-top: 0.8rem;
 		display: flex;
 	}
-	
-	.item img{
+
+	.item img {
 		height: 5rem;
 		width: 5rem;
 		flex: 0;
 	}
 
-	.item .detail{
+	.item .detail {
 		text-align: left;
 		color: white;
 		vertical-align: top;
@@ -42,13 +43,13 @@
 		flex-direction: column;
 	}
 
-	.item .row{
+	.item .row {
 		display: flex;
 		flex-direction: row;
 		border-top: 0.05rem solid white;
 	}
 
-	.item .row span{
+	.item .row span {
 		flex: 1 1 20px;
 		border-left: 0.05rem solid white;
 		text-overflow: ellipsis;
@@ -61,46 +62,47 @@
 		color: white;
 	}
 
-	#infobox > h1{
+	#infobox>h1 {
 		font-weight: bold;
 		margin: 0;
 		margin-top: 0.2rem;
 	}
 
-	#infobox > p{
+	#infobox>p {
 		margin: 0.2rem;
 	}
 </style>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+	integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <link rel='stylesheet' href='./css/rainbow.css'>
-	
+
 <body>
 	<div id="infobox">
 		<h1>Queue</h1>
-		<p>!request &lt;name or key&gt;<br/>find songs at beatsaver.com</p>
+		<p>!request &lt;name or key&gt;<br />find songs at beatsaver.com</p>
 	</div>
 	<div class='queue-container'></div>
 
 	<script>
 		(async () => {
 			let delay = 1000;
-			while(false){
-				await new Promise(c => setTimeout(c,delay))
+			while (false) {
+				await new Promise(c => setTimeout(c, delay))
 
 				const curQueue = encodeURIComponent($('.song-key').get().map(e => e.innerText).sort().join('&'))
 				let data = 'NO CHANGE'
 
 				try {
-					data = await (await fetch(`http://localhost:5050/queue?current=${curQueue}`,{mode:'cors'})).text()
-				}catch(e){
+					data = await (await fetch(`http://localhost:5050/queue?current=${curQueue}`, { mode: 'cors' })).text()
+				} catch (e) {
 					console.warn(e)
 				}
 
-				if(data == 'NO CHANGE') continue
+				if (data == 'NO CHANGE') continue
 
 				$('.queue-container').html(data)
-				$('.requestor').each((_,e) => e.innerText = JSON.parse(e.innerText).DisplayName)
+				$('.requestor').each((_, e) => e.innerText = JSON.parse(e.innerText).DisplayName)
 			}
 		})()
 
@@ -108,7 +110,7 @@
 			return
 			$('.queue-container, #infobox').fadeIn()
 		}
-	
+
 		function hideQueue() {
 			$('.queue-container, #infobox').fadeOut()
 			return
